@@ -1,0 +1,1020 @@
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSwap - Professional Service Exchange Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    popover: {
+                        DEFAULT: "var(--popover)",
+                        foreground: "var(--popover-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                    chart: {
+                        "1": "var(--chart-1)",
+                        "2": "var(--chart-2)",
+                        "3": "var(--chart-3)",
+                        "4": "var(--chart-4)",
+                        "5": "var(--chart-5)",
+                    }
+                },
+                fontFamily: {
+                    sans: ["var(--font-sans)"],
+                    serif: ["var(--font-serif)"],
+                    mono: ["var(--font-mono)"],
+                }
+            },
+        }
+    };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --card: #101011;
+            --ring: hsl(221.74, 13.14%, 34.31%);
+            --input: #2b2b2b;
+            --muted: #404040;
+            --accent: hsl(0, 0%, 92.16%);
+            --border: #2b2b2b;
+            --radius: 0.4rem;
+            --shadow: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 1px 2px -1px hsl(9, 75%, 61% / 0.00);
+            --chart-1: hsl(203.8863, 88.2845%, 53.1373%);
+            --chart-2: hsl(159.7826, 100%, 36.0784%);
+            --chart-3: hsl(42.0290, 92.8251%, 56.2745%);
+            --chart-4: hsl(147.1429, 78.5047%, 41.9608%);
+            --chart-5: hsl(341.4894, 75.2000%, 50.9804%);
+            --popover: hsl(45, 25%, 97%);
+            --primary: #f5f5f5;
+            --sidebar: hsl(45, 25%, 97%);
+            --spacing: 0.25rem;
+            --font-mono: Menlo, monospace;
+            --font-sans: 'Inter', sans-serif;
+            --secondary: #ebebeb;
+            --shadow-lg: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 4px 6px -1px hsl(9, 75%, 61% / 0.00);
+            --shadow-md: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 2px 4px -1px hsl(9, 75%, 61% / 0.00);
+            --shadow-sm: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 1px 2px -1px hsl(9, 75%, 61% / 0.00);
+            --shadow-xl: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00), 0px 8px 10px -1px hsl(9, 75%, 61% / 0.00);
+            --shadow-xs: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
+            --background: #090909;
+            --font-serif: 'Inter', sans-serif;
+            --foreground: #ebebeb;
+            --shadow-2xl: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
+            --shadow-2xs: 0px 2px 0px 0px hsl(9, 75%, 61% / 0.00);
+            --destructive: hsl(356.3033, 90.5579%, 54.3137%);
+            --sidebar-ring: hsl(9, 75%, 61%);
+            --sidebar-accent: hsl(25, 45%, 80%);
+            --sidebar-border: hsl(45, 15%, 80%);
+            --card-foreground: hsl(0, 0%, 100%);
+            --sidebar-primary: hsl(9, 75%, 61%);
+            --tracking-normal: 0em;
+            --muted-foreground: #ababab;
+            --accent-foreground: hsl(0, 0%, 0%);
+            --popover-foreground: hsl(0, 0%, 100%);
+            --primary-foreground: #0d0d0d;
+            --sidebar-foreground: hsl(20, 14%, 17%);
+            --secondary-foreground: #0d0d0d;
+            --destructive-foreground: #ffffff;
+            --sidebar-accent-foreground: hsl(20, 14%, 17%);
+            --sidebar-primary-foreground: hsl(0, 0%, 100%);
+        }
+
+        .dark {
+            --card: hsl(20, 14%, 8%);
+            --ring: hsl(9, 75%, 61%);
+            --input: hsl(20, 14%, 18%);
+            --muted: hsl(20, 14%, 15%);
+            --accent: hsl(25, 45%, 20%);
+            --border: hsl(20, 14%, 15%);
+            --chart-1: hsl(203.8863, 88.2845%, 53.1373%);
+            --chart-2: hsl(159.7826, 100%, 36.0784%);
+            --chart-3: hsl(42.0290, 92.8251%, 56.2745%);
+            --chart-4: hsl(147.1429, 78.5047%, 41.9608%);
+            --chart-5: hsl(341.4894, 75.2000%, 50.9804%);
+            --popover: hsl(20, 14%, 4%);
+            --primary: hsl(9, 75%, 61%);
+            --sidebar: hsl(20, 14%, 8%);
+            --secondary: hsl(30, 15%, 52%);
+            --background: hsl(20, 14%, 4%);
+            --foreground: hsl(45, 25%, 91%);
+            --destructive: hsl(356.3033, 90.5579%, 54.3137%);
+            --sidebar-ring: hsl(9, 75%, 61%);
+            --sidebar-accent: hsl(25, 45%, 20%);
+            --sidebar-border: hsl(20, 14%, 15%);
+            --card-foreground: hsl(45, 25%, 85%);
+            --sidebar-primary: hsl(9, 75%, 61%);
+            --muted-foreground: hsl(45, 15%, 46%);
+            --accent-foreground: hsl(45, 25%, 85%);
+            --popover-foreground: hsl(45, 25%, 91%);
+            --primary-foreground: hsl(0, 0%, 100%);
+            --sidebar-foreground: hsl(45, 25%, 85%);
+            --secondary-foreground: hsl(0, 0%, 100%);
+            --destructive-foreground: hsl(0, 0%, 100%);
+            --sidebar-accent-foreground: hsl(45, 25%, 85%);
+            --sidebar-primary-foreground: hsl(0, 0%, 100%);
+        }
+
+        * {
+            border-color: hsl(var(--border));
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground">
+    <!-- @COMPONENT: Navigation -->
+    <nav class="border-b border-border bg-card/50 backdrop-blur sticky top-0 z-50">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-exchange-alt text-primary-foreground text-sm"></i>
+                        </div>
+                        <span class="text-xl font-bold text-foreground">SkillSwap</span>
+                    </div>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Browse Services</a>
+                        <a href="#" class="text-muted-foreground hover:text-foreground transition-colors">How It Works</a>
+                        <a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Dashboard</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-muted-foreground hover:text-foreground">
+                        <i class="fas fa-bell text-lg"></i>
+                    </button>
+                    <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
+                        Sign Up
+                    </button>
+                    <button class="border border-border px-4 py-2 rounded-md hover:bg-accent transition-colors">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: Navigation -->
+
+    <!-- @COMPONENT: Hero Section -->
+    <section class="py-20 px-4 lg:px-8">
+        <div class="container mx-auto text-center">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+                    Trade Skills, Not Cash
+                </h1>
+                <p class="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                    Get professional services by offering your professional services. No payment required, just skill bartering between talented professionals.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                    <button class="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+                        Start Swapping
+                    </button>
+                    <button class="border border-border px-8 py-3 rounded-lg font-semibold hover:bg-accent transition-colors">
+                        Browse Services
+                    </button>
+                </div>
+                
+                <!-- Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary mb-2" data-bind="stats.activeUsers">1,247</div>
+                        <div class="text-sm text-muted-foreground">Active Users</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary mb-2" data-bind="stats.completedSwaps">856</div>
+                        <div class="text-sm text-muted-foreground">Completed Swaps</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary mb-2" data-bind="stats.avgRating">4.8</div>
+                        <div class="text-sm text-muted-foreground">Avg Rating</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-primary mb-2" data-bind="stats.serviceCategories">25+</div>
+                        <div class="text-sm text-muted-foreground">Service Categories</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Hero Section -->
+
+    <!-- @COMPONENT: How It Works -->
+    <section class="py-20 px-4 lg:px-8 bg-card/30">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">How SkillSwap Works</h2>
+                <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Simple, transparent skill exchange in four easy steps
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center group">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
+                        <i class="fas fa-user-plus text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Create Profile</h3>
+                    <p class="text-muted-foreground">Set up your profile with skills you offer and services you need</p>
+                </div>
+                
+                <div class="text-center group">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
+                        <i class="fas fa-search text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Find Matches</h3>
+                    <p class="text-muted-foreground">Browse professionals who need your skills and offer what you need</p>
+                </div>
+                
+                <div class="text-center group">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
+                        <i class="fas fa-handshake text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Propose Swap</h3>
+                    <p class="text-muted-foreground">Send swap proposals and agree on project scope and deliverables</p>
+                </div>
+                
+                <div class="text-center group">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
+                        <i class="fas fa-check-circle text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Complete & Rate</h3>
+                    <p class="text-muted-foreground">Deliver work, confirm completion, and rate each other's performance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: How It Works -->
+
+    <!-- @COMPONENT: Service Categories -->
+    <section class="py-20 px-4 lg:px-8">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Popular Service Categories</h2>
+                <p class="text-xl text-muted-foreground">
+                    Discover the most in-demand professional services on our platform
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- @MAP: serviceCategories.map(category => ( -->
+                <div class="bg-card border border-border rounded-lg p-6 hover:border-primary/50 transition-colors cursor-pointer group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-primary/20 transition-colors">
+                            <i class="fas fa-code text-xl text-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold" data-bind="category.name">Web Development</h3>
+                            <p class="text-sm text-muted-foreground" data-bind="category.count">342 professionals</p>
+                        </div>
+                    </div>
+                    <p class="text-muted-foreground text-sm mb-4" data-bind="category.description">
+                        Full-stack development, frontend, backend, and mobile app development services
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">React</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Node.js</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Python</span>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-lg p-6 hover:border-primary/50 transition-colors cursor-pointer group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-primary/20 transition-colors">
+                            <i class="fas fa-palette text-xl text-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold">Graphic Design</h3>
+                            <p class="text-sm text-muted-foreground">289 professionals</p>
+                        </div>
+                    </div>
+                    <p class="text-muted-foreground text-sm mb-4">
+                        Logo design, branding, print design, and digital graphics creation
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Photoshop</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Illustrator</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Figma</span>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-lg p-6 hover:border-primary/50 transition-colors cursor-pointer group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-primary/20 transition-colors">
+                            <i class="fas fa-bullhorn text-xl text-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold">Digital Marketing</h3>
+                            <p class="text-sm text-muted-foreground">201 professionals</p>
+                        </div>
+                    </div>
+                    <p class="text-muted-foreground text-sm mb-4">
+                        SEO, social media management, content marketing, and PPC campaigns
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">SEO</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Google Ads</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Analytics</span>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-lg p-6 hover:border-primary/50 transition-colors cursor-pointer group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-primary/20 transition-colors">
+                            <i class="fas fa-pen text-xl text-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold">Content Writing</h3>
+                            <p class="text-sm text-muted-foreground">156 professionals</p>
+                        </div>
+                    </div>
+                    <p class="text-muted-foreground text-sm mb-4">
+                        Blog posts, copywriting, technical documentation, and creative content
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Blogging</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">SEO Writing</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Copywriting</span>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-lg p-6 hover:border-primary/50 transition-colors cursor-pointer group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-primary/20 transition-colors">
+                            <i class="fas fa-video text-xl text-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold">Video Production</h3>
+                            <p class="text-sm text-muted-foreground">134 professionals</p>
+                        </div>
+                    </div>
+                    <p class="text-muted-foreground text-sm mb-4">
+                        Video editing, motion graphics, animation, and production services
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">After Effects</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Premiere</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Animation</span>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-lg p-6 hover:border-primary/50 transition-colors cursor-pointer group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-primary/20 transition-colors">
+                            <i class="fas fa-chart-line text-xl text-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold">Business Consulting</h3>
+                            <p class="text-sm text-muted-foreground">98 professionals</p>
+                        </div>
+                    </div>
+                    <p class="text-muted-foreground text-sm mb-4">
+                        Strategy consulting, business planning, financial analysis, and operations
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Strategy</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Finance</span>
+                        <span class="bg-accent/20 text-accent-foreground px-2 py-1 rounded text-xs">Operations</span>
+                    </div>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Service Categories -->
+
+    <!-- @COMPONENT: Featured Swaps -->
+    <section class="py-20 px-4 lg:px-8 bg-card/30">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Featured Swap Opportunities</h2>
+                <p class="text-xl text-muted-foreground">
+                    Ready-to-match professionals looking for skill exchanges
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- @MAP: featuredSwaps.map(swap => ( -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-primary">Perfect Match Available</h3>
+                        <span class="bg-primary/10 text-primary px-2 py-1 rounded text-xs">85% Match</span>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Person A -->
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <!-- Professional headshot of a confident woman with dark hair -->
+                                <img src="https://pixabay.com/get/g620ee2fa0e2c8238187984345b40304cdd5065a373bae819fb2bbc1e7373f4acae2ab4675adc0599c7657a52c1526ba94121068ee3661673e143873146964dc0_1280.jpg" alt="Sarah Chen" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-semibold" data-bind="swap.personA.name">Sarah Chen</h4>
+                                    <p class="text-sm text-muted-foreground" data-bind="swap.personA.title">UX/UI Designer</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                </div>
+                                <span class="text-sm text-muted-foreground" data-bind="swap.personA.rating">4.9 (23 reviews)</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-green-400 mb-1">Offers:</p>
+                                <p class="text-sm text-muted-foreground" data-bind="swap.personA.offers">Complete mobile app UI design with prototyping</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-primary mb-1">Needs:</p>
+                                <p class="text-sm text-muted-foreground" data-bind="swap.personA.needs">Frontend development for React web app</p>
+                            </div>
+                        </div>
+
+                        <!-- Swap Arrow -->
+                        <div class="hidden md:flex items-center justify-center">
+                            <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exchange-alt text-primary"></i>
+                            </div>
+                        </div>
+
+                        <!-- Person B -->
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <!-- Professional headshot of a smiling man with glasses -->
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=80&h=80" alt="Marcus Rodriguez" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-semibold" data-bind="swap.personB.name">Marcus Rodriguez</h4>
+                                    <p class="text-sm text-muted-foreground" data-bind="swap.personB.title">React Developer</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                </div>
+                                <span class="text-sm text-muted-foreground" data-bind="swap.personB.rating">4.8 (31 reviews)</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-green-400 mb-1">Offers:</p>
+                                <p class="text-sm text-muted-foreground" data-bind="swap.personB.offers">React frontend development with responsive design</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-primary mb-1">Needs:</p>
+                                <p class="text-sm text-muted-foreground" data-bind="swap.personB.needs">Mobile app UI/UX design and prototypes</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-border">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-muted-foreground">
+                                <span class="font-medium">Estimated Value:</span> $1,200 each
+                            </div>
+                            <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors text-sm">
+                                Propose Swap
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-primary">High-Value Exchange</h3>
+                        <span class="bg-primary/10 text-primary px-2 py-1 rounded text-xs">92% Match</span>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Person A -->
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <!-- Professional headshot of a woman with short blonde hair -->
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=80&h=80" alt="Emma Thompson" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-semibold">Emma Thompson</h4>
+                                    <p class="text-sm text-muted-foreground">Content Strategist</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                </div>
+                                <span class="text-sm text-muted-foreground">5.0 (18 reviews)</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-green-400 mb-1">Offers:</p>
+                                <p class="text-sm text-muted-foreground">3-month content strategy + 10 blog posts</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-primary mb-1">Needs:</p>
+                                <p class="text-sm text-muted-foreground">Video editing for 10 marketing videos</p>
+                            </div>
+                        </div>
+
+                        <!-- Swap Arrow -->
+                        <div class="hidden md:flex items-center justify-center">
+                            <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exchange-alt text-primary"></i>
+                            </div>
+                        </div>
+
+                        <!-- Person B -->
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <!-- Professional headshot of a man with beard -->
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=80&h=80" alt="David Kim" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-semibold">David Kim</h4>
+                                    <p class="text-sm text-muted-foreground">Video Editor</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="fas fa-star text-xs"></i>
+                                    <i class="far fa-star text-xs"></i>
+                                </div>
+                                <span class="text-sm text-muted-foreground">4.7 (42 reviews)</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-green-400 mb-1">Offers:</p>
+                                <p class="text-sm text-muted-foreground">Professional video editing with motion graphics</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-primary mb-1">Needs:</p>
+                                <p class="text-sm text-muted-foreground">Content strategy and blog writing services</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-border">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-muted-foreground">
+                                <span class="font-medium">Estimated Value:</span> $2,500 each
+                            </div>
+                            <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors text-sm">
+                                Propose Swap
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="border border-border px-8 py-3 rounded-lg hover:bg-accent transition-colors">
+                    View All Opportunities
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Featured Swaps -->
+
+    <!-- @COMPONENT: User Dashboard Preview -->
+    <section class="py-20 px-4 lg:px-8">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Manage Your Swaps</h2>
+                <p class="text-xl text-muted-foreground">
+                    Track projects, communicate with partners, and build your reputation
+                </p>
+            </div>
+            
+            <div class="max-w-6xl mx-auto">
+                <!-- Dashboard Header -->
+                <div class="bg-card border border-border rounded-lg p-6 mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold">My Dashboard</h3>
+                        <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
+                            New Service Listing
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary mb-1" data-bind="dashboard.activeSwaps">3</div>
+                            <div class="text-sm text-muted-foreground">Active Swaps</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-400 mb-1" data-bind="dashboard.completedSwaps">12</div>
+                            <div class="text-sm text-muted-foreground">Completed</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-yellow-400 mb-1" data-bind="dashboard.rating">4.9</div>
+                            <div class="text-sm text-muted-foreground">Your Rating</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-400 mb-1" data-bind="dashboard.proposals">7</div>
+                            <div class="text-sm text-muted-foreground">Pending Proposals</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Projects -->
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-card border border-border rounded-lg p-6">
+                        <h4 class="text-lg font-semibold mb-4">Active Projects</h4>
+                        
+                        <!-- @MAP: activeProjects.map(project => ( -->
+                        <div class="space-y-4">
+                            <div class="border border-border rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-3">
+                                        <!-- Professional headshot -->
+                                        <img src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=40&h=40" alt="Project Partner" class="w-8 h-8 rounded-full object-cover">
+                                        <div>
+                                            <h5 class="font-medium text-sm" data-bind="project.partnerName">Alex Rivera</h5>
+                                            <p class="text-xs text-muted-foreground" data-bind="project.service">Logo Design ↔ Web Development</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-primary/10 text-primary px-2 py-1 rounded text-xs" data-bind="project.status">In Progress</span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                                        <span>Progress</span>
+                                        <span data-bind="project.progress">65%</span>
+                                    </div>
+                                    <div class="w-full bg-muted rounded-full h-2">
+                                        <div class="bg-primary h-2 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-muted-foreground" data-bind="project.deadline">Due: Jan 15, 2024</span>
+                                    <button class="text-primary hover:text-primary/80 transition-colors" data-event="click:openProject" data-implementation="Should open project details modal">View Details</button>
+                                </div>
+                            </div>
+
+                            <div class="border border-border rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-3">
+                                        <!-- Professional headshot -->
+                                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=40&h=40" alt="Project Partner" class="w-8 h-8 rounded-full object-cover">
+                                        <div>
+                                            <h5 class="font-medium text-sm">Maria Santos</h5>
+                                            <p class="text-xs text-muted-foreground">Content Writing ↔ SEO Audit</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-yellow-400/10 text-yellow-400 px-2 py-1 rounded text-xs">Review</span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                                        <span>Progress</span>
+                                        <span>90%</span>
+                                    </div>
+                                    <div class="w-full bg-muted rounded-full h-2">
+                                        <div class="bg-yellow-400 h-2 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-muted-foreground">Due: Jan 12, 2024</span>
+                                    <button class="text-primary hover:text-primary/80 transition-colors">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+
+                    <div class="bg-card border border-border rounded-lg p-6">
+                        <h4 class="text-lg font-semibold mb-4">Recent Messages</h4>
+                        
+                        <div class="space-y-4">
+                            <!-- @MAP: recentMessages.map(message => ( -->
+                            <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/20 transition-colors cursor-pointer">
+                                <!-- Professional headshot -->
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=40&h=40" alt="Message Sender" class="w-8 h-8 rounded-full object-cover">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <h5 class="font-medium text-sm" data-bind="message.senderName">David Kim</h5>
+                                        <span class="text-xs text-muted-foreground" data-bind="message.time">2h ago</span>
+                                    </div>
+                                    <p class="text-sm text-muted-foreground truncate" data-bind="message.preview">Hey! I've uploaded the first draft of the video. Could you take a look and let me know...</p>
+                                </div>
+                                <div class="w-2 h-2 bg-primary rounded-full" data-mock="true"></div>
+                            </div>
+
+                            <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/20 transition-colors cursor-pointer">
+                                <!-- Professional headshot -->
+                                <img src="https://pixabay.com/get/gdc42419ad8a287b3a1a3aaa0ad75cbb6dc7cb302a36ab4429c5ee6c203adb2f545dc3c92b66beae5f2d11af5d37e09b7cdbe37da01834d0ebac63bf09ffad7ed_1280.jpg" alt="Message Sender" class="w-8 h-8 rounded-full object-cover">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <h5 class="font-medium text-sm">Sarah Chen</h5>
+                                        <span class="text-xs text-muted-foreground">1d ago</span>
+                                    </div>
+                                    <p class="text-sm text-muted-foreground truncate">The mobile design looks great! I've started working on the React components...</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-accent/20 transition-colors cursor-pointer">
+                                <!-- Professional headshot -->
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=40&h=40" alt="Message Sender" class="w-8 h-8 rounded-full object-cover">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <h5 class="font-medium text-sm">Emma Thompson</h5>
+                                        <span class="text-xs text-muted-foreground">2d ago</span>
+                                    </div>
+                                    <p class="text-sm text-muted-foreground truncate">Thanks for the content strategy document. I'll start on the videos this week...</p>
+                                </div>
+                            </div>
+                            <!-- @END_MAP )) -->
+                        </div>
+                        
+                        <button class="w-full mt-4 border border-border px-4 py-2 rounded-md hover:bg-accent transition-colors text-sm">
+                            View All Messages
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: User Dashboard Preview -->
+
+    <!-- @COMPONENT: Testimonials -->
+    <section class="py-20 px-4 lg:px-8 bg-card/30">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Success Stories</h2>
+                <p class="text-xl text-muted-foreground">
+                    Hear from professionals who've transformed their businesses through skill swapping
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- @MAP: testimonials.map(testimonial => ( -->
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                    </div>
+                    <p class="text-muted-foreground mb-6 italic" data-bind="testimonial.quote">
+                        "SkillSwap completely changed how I approach my freelance business. I've gotten $10k worth of services just by offering my design skills in return."
+                    </p>
+                    <div class="flex items-center space-x-3">
+                        <!-- Professional headshot of a smiling woman -->
+                        <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=48&h=48" alt="Jessica Martinez" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-semibold" data-bind="testimonial.name">Jessica Martinez</h4>
+                            <p class="text-sm text-muted-foreground" data-bind="testimonial.title">Freelance Designer</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                    </div>
+                    <p class="text-muted-foreground mb-6 italic">
+                        "The quality of professionals on SkillSwap is incredible. I've built lasting partnerships and significantly reduced my business expenses."
+                    </p>
+                    <div class="flex items-center space-x-3">
+                        <!-- Professional headshot of a man with beard -->
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=48&h=48" alt="Robert Chen" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-semibold">Robert Chen</h4>
+                            <p class="text-sm text-muted-foreground">Marketing Consultant</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                        <i class="fas fa-star text-sm"></i>
+                    </div>
+                    <p class="text-muted-foreground mb-6 italic">
+                        "As a startup founder, SkillSwap has been a game-changer. We've gotten professional services without touching our cash runway."
+                    </p>
+                    <div class="flex items-center space-x-3">
+                        <!-- Professional headshot of a young woman -->
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=48&h=48" alt="Amanda Foster" class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-semibold">Amanda Foster</h4>
+                            <p class="text-sm text-muted-foreground">Startup Founder</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Testimonials -->
+
+    <!-- @COMPONENT: CTA Section -->
+    <section class="py-20 px-4 lg:px-8">
+        <div class="container mx-auto text-center">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl lg:text-5xl font-bold mb-6">
+                    Ready to Transform Your Business?
+                </h2>
+                <p class="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                    Join thousands of professionals who are getting premium services without spending cash. Your skills are more valuable than you think.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                    <button class="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold hover:bg-primary/90 transition-colors text-lg" data-event="click:handleSignup" data-implementation="Should open signup modal or navigate to registration">
+                        Join SkillSwap Free
+                    </button>
+                    <button class="border border-border px-8 py-4 rounded-lg font-semibold hover:bg-accent transition-colors text-lg">
+                        Watch Demo
+                    </button>
+                </div>
+                
+                <div class="flex items-center justify-center space-x-8 text-sm text-muted-foreground">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-check text-green-400"></i>
+                        <span>Free to join</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-check text-green-400"></i>
+                        <span>No hidden fees</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-check text-green-400"></i>
+                        <span>Verified professionals</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: CTA Section -->
+
+    <!-- @COMPONENT: Footer -->
+    <footer class="border-t border-border bg-card/30 py-16 px-4 lg:px-8">
+        <div class="container mx-auto">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-exchange-alt text-primary-foreground text-sm"></i>
+                        </div>
+                        <span class="text-xl font-bold">SkillSwap</span>
+                    </div>
+                    <p class="text-muted-foreground mb-4">
+                        The professional skill exchange platform that connects talented individuals for mutual benefit.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-muted-foreground hover:text-foreground transition-colors">
+                            <i class="fab fa-twitter text-lg"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-foreground transition-colors">
+                            <i class="fab fa-linkedin text-lg"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-foreground transition-colors">
+                            <i class="fab fa-github text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Platform</h4>
+                    <ul class="space-y-2 text-muted-foreground">
+                        <li><a href="#" class="hover:text-foreground transition-colors">Browse Services</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">How It Works</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Success Stories</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Pricing</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-muted-foreground">
+                        <li><a href="#" class="hover:text-foreground transition-colors">Help Center</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Community Guidelines</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Dispute Resolution</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-muted-foreground">
+                        <li><a href="#" class="hover:text-foreground transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between">
+                <p class="text-muted-foreground text-sm">
+                    © 2024 SkillSwap. All rights reserved.
+                </p>
+                <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                    <select class="bg-input border border-border rounded-md px-3 py-1 text-sm text-foreground">
+                        <option>English</option>
+                        <option>Spanish</option>
+                        <option>French</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <script>
+        // TODO: Implement business logic, API calls, and state management
+        
+        (function() {
+            // Mobile menu toggle functionality
+            const mobileMenuButton = document.querySelector('[data-mobile-menu]');
+            const mobileMenu = document.querySelector('[data-mobile-menu-content]');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Service category hover effects
+            document.querySelectorAll('.service-category-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
