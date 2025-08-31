@@ -38,8 +38,8 @@ export default function Profile() {
     enabled: true
   });
 
-  const offeredServices = services.filter((s: any) => s.serviceType === "offer");
-  const neededServices = services.filter((s: any) => s.serviceType === "need");
+  const offeredServices = (services as any[]).filter((s: any) => s.serviceType === "offer");
+  const neededServices = (services as any[]).filter((s: any) => s.serviceType === "need");
 
   return (
     <div className="min-h-screen bg-background">

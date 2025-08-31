@@ -26,9 +26,9 @@ export default function Dashboard() {
     enabled: true
   });
 
-  const activeProjects = projects.filter((p: any) => p.status === "active");
-  const completedProjects = projects.filter((p: any) => p.status === "completed");
-  const pendingProposals = proposals.filter((p: any) => p.status === "pending");
+  const activeProjects = (projects as any[]).filter((p: any) => p.status === "active");
+  const completedProjects = (projects as any[]).filter((p: any) => p.status === "completed");
+  const pendingProposals = (proposals as any[]).filter((p: any) => p.status === "pending");
 
   const stats = {
     activeSwaps: activeProjects.length,
@@ -54,37 +54,37 @@ export default function Dashboard() {
             </Link>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <Card>
-              <CardContent className="p-6 text-center">
-                <div className="text-2xl font-bold text-primary mb-1" data-testid="text-active-swaps">
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-primary mb-1" data-testid="text-active-swaps">
                   {stats.activeSwaps}
                 </div>
-                <div className="text-sm text-muted-foreground">Active Swaps</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Active Swaps</div>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-6 text-center">
-                <div className="text-2xl font-bold text-green-400 mb-1" data-testid="text-completed-swaps">
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-green-400 mb-1" data-testid="text-completed-swaps">
                   {stats.completedSwaps}
                 </div>
-                <div className="text-sm text-muted-foreground">Completed</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Completed</div>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-6 text-center">
-                <div className="text-2xl font-bold text-yellow-400 mb-1" data-testid="text-user-rating">
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-yellow-400 mb-1" data-testid="text-user-rating">
                   {stats.rating}
                 </div>
-                <div className="text-sm text-muted-foreground">Your Rating</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Your Rating</div>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-6 text-center">
-                <div className="text-2xl font-bold text-blue-400 mb-1" data-testid="text-pending-proposals">
+              <CardContent className="p-4 sm:p-6 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-blue-400 mb-1" data-testid="text-pending-proposals">
                   {stats.proposals}
                 </div>
-                <div className="text-sm text-muted-foreground">Pending Proposals</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Pending Proposals</div>
               </CardContent>
             </Card>
           </div>
@@ -92,11 +92,11 @@ export default function Dashboard() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="projects" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="projects" data-testid="tab-projects">Projects</TabsTrigger>
-            <TabsTrigger value="proposals" data-testid="tab-proposals">Proposals</TabsTrigger>
-            <TabsTrigger value="services" data-testid="tab-services">My Services</TabsTrigger>
-            <TabsTrigger value="messages" data-testid="tab-messages">Messages</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
+            <TabsTrigger value="projects" data-testid="tab-projects" className="text-xs sm:text-sm">Projects</TabsTrigger>
+            <TabsTrigger value="proposals" data-testid="tab-proposals" className="text-xs sm:text-sm">Proposals</TabsTrigger>
+            <TabsTrigger value="services" data-testid="tab-services" className="text-xs sm:text-sm">Services</TabsTrigger>
+            <TabsTrigger value="messages" data-testid="tab-messages" className="text-xs sm:text-sm">Messages</TabsTrigger>
           </TabsList>
 
           <TabsContent value="projects" className="space-y-6">
@@ -205,7 +205,7 @@ export default function Dashboard() {
                     <div key={i} className="h-32 bg-card rounded-lg animate-pulse" />
                   ))}
                 </div>
-              ) : proposals.length === 0 ? (
+              ) : (proposals as any[]).length === 0 ? (
                 <Card>
                   <CardContent className="p-8 text-center">
                     <p className="text-muted-foreground">No swap proposals yet</p>
@@ -217,7 +217,7 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
               ) : (
-                proposals.map((proposal: any) => (
+                (proposals as any[]).map((proposal: any) => (
                   <Card key={proposal.id} data-testid={`card-proposal-${proposal.id}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-4">
@@ -281,7 +281,7 @@ export default function Dashboard() {
                 [...Array(6)].map((_, i) => (
                   <div key={i} className="h-48 bg-card rounded-lg animate-pulse" />
                 ))
-              ) : services.length === 0 ? (
+              ) : (services as any[]).length === 0 ? (
                 <Card className="col-span-full">
                   <CardContent className="p-8 text-center">
                     <p className="text-muted-foreground mb-4">No services listed yet</p>
@@ -293,7 +293,7 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
               ) : (
-                services.map((service: any) => (
+                (services as any[]).map((service: any) => (
                   <Card key={service.id} data-testid={`card-my-service-${service.id}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-4">

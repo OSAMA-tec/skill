@@ -91,6 +91,10 @@ export class MemStorage implements IStorage {
     const user: User = { 
       ...insertUser, 
       id,
+      title: insertUser.title || null,
+      bio: insertUser.bio || null,
+      skills: insertUser.skills || [],
+      profileImage: insertUser.profileImage || null,
       rating: 0,
       reviewCount: 0,
       completedSwaps: 0,
@@ -138,7 +142,7 @@ export class MemStorage implements IStorage {
         service.title.toLowerCase().includes(lowerQuery) ||
         service.description.toLowerCase().includes(lowerQuery) ||
         service.category.toLowerCase().includes(lowerQuery) ||
-        service.skills.some(skill => skill.toLowerCase().includes(lowerQuery))
+        (service.skills || []).some(skill => skill.toLowerCase().includes(lowerQuery))
       )
     );
   }
@@ -148,6 +152,10 @@ export class MemStorage implements IStorage {
     const service: Service = { 
       ...insertService, 
       id,
+      estimatedValue: insertService.estimatedValue || null,
+      estimatedDuration: insertService.estimatedDuration || null,
+      skills: insertService.skills || [],
+      portfolioFiles: insertService.portfolioFiles || [],
       isActive: true,
       createdAt: new Date()
     };
@@ -184,6 +192,7 @@ export class MemStorage implements IStorage {
     const proposal: SwapProposal = { 
       ...insertProposal, 
       id,
+      message: insertProposal.message || null,
       status: "pending",
       createdAt: new Date()
     };
@@ -225,6 +234,7 @@ export class MemStorage implements IStorage {
       progress: 0,
       deliverables: insertProject.deliverables || [],
       milestones: insertProject.milestones || [],
+      deadline: insertProject.deadline || null,
       createdAt: new Date(),
       completedAt: null
     };
@@ -258,6 +268,7 @@ export class MemStorage implements IStorage {
     const review: Review = { 
       ...insertReview, 
       id,
+      comment: insertReview.comment || null,
       createdAt: new Date()
     };
     this.reviews.set(id, review);
@@ -268,7 +279,7 @@ export class MemStorage implements IStorage {
   async getMessagesByProject(projectId: string): Promise<Message[]> {
     return Array.from(this.messages.values())
       .filter(message => message.projectId === projectId)
-      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+      .sort((a, b) => (a.createdAt?.getTime() || 0) - (b.createdAt?.getTime() || 0));
   }
 
   async getMessagesBetweenUsers(userId1: string, userId2: string): Promise<Message[]> {
@@ -277,7 +288,7 @@ export class MemStorage implements IStorage {
         (message.senderId === userId1 && message.recipientId === userId2) ||
         (message.senderId === userId2 && message.recipientId === userId1)
       )
-      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+      .sort((a, b) => (a.createdAt?.getTime() || 0) - (b.createdAt?.getTime() || 0));
   }
 
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
@@ -285,6 +296,7 @@ export class MemStorage implements IStorage {
     const message: Message = { 
       ...insertMessage, 
       id,
+      projectId: insertMessage.projectId || null,
       isRead: false,
       createdAt: new Date()
     };

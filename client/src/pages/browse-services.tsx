@@ -27,12 +27,12 @@ export default function BrowseServices() {
     enabled: true
   });
 
-  const filteredServices = services.filter((service: any) => {
+  const filteredServices = (services as any[]).filter((service: any) => {
     if (searchQuery && !service.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !service.description.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
     }
-    if (selectedCategory && service.category !== selectedCategory) {
+    if (selectedCategory && selectedCategory !== "all" && service.category !== selectedCategory) {
       return false;
     }
     if (serviceType !== "all" && service.serviceType !== serviceType) {
@@ -71,7 +71,7 @@ export default function BrowseServices() {
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}

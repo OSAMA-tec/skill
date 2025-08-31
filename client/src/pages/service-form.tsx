@@ -76,10 +76,10 @@ export default function ServiceForm() {
   // Update form when existing service loads
   if (existingService && !form.getValues().title) {
     form.reset({
-      ...existingService,
-      estimatedValue: existingService.estimatedValue || undefined
+      ...(existingService as any),
+      estimatedValue: (existingService as any).estimatedValue || undefined
     });
-    setUploadedFiles(existingService.portfolioFiles || []);
+    setUploadedFiles((existingService as any).portfolioFiles || []);
   }
 
   const createMutation = useMutation({
@@ -383,6 +383,7 @@ export default function ServiceForm() {
                           <Input 
                             placeholder="e.g., 2-3 weeks"
                             {...field}
+                            value={field.value || ""}
                             data-testid="input-estimated-duration"
                           />
                         </FormControl>
