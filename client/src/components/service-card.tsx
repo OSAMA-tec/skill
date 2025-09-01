@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, Clock, DollarSign } from "lucide-react";
+import { Star, Clock, DollarSign, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 
 interface ServiceCardProps {
@@ -105,9 +105,12 @@ export default function ServiceCard({ service }: ServiceCardProps) {
               View Profile
             </Button>
           </Link>
-          <Button size="sm" className="flex-1" data-testid={`button-propose-swap-${service.id}`}>
-            {service.serviceType === "offer" ? "Request Service" : "Offer Help"}
-          </Button>
+          <Link href={`/swap-proposal/${service.id}`}>
+            <Button size="sm" className="flex-1" data-testid={`button-propose-swap-${service.id}`}>
+              {service.serviceType === "offer" ? "Request Service" : "Offer Help"}
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>

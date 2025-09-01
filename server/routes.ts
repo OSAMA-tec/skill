@@ -86,8 +86,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Username already taken" });
       }
       
+      // Hash password before storing
+      const hashedPassword = await hashPassword(userData.password);
+      
       // Create user
-      const user = await storage.createUser(userData);
+      const user = await storage.createUser({
+        ...userData,
+        password: hashedPassword
+      });
       
       // Create session
       (req.session as any).userId = user.id;
@@ -114,8 +120,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Invalid credentials" });
       }
       
-      // Check password (in production, use bcrypt)
-      if (user.password !== password) {
+      // Verify password using bcrypt
+      const isValidPassword = await verifyPassword(password, user.password);
+      if (!isValidPassword) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
       

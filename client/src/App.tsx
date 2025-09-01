@@ -9,9 +9,11 @@ import BrowseServices from "@/pages/browse-services";
 import Dashboard from "@/pages/dashboard";
 import Profile from "@/pages/profile";
 import ServiceForm from "@/pages/service-form";
+import ProfileSetup from "@/pages/profile-setup";
 import Messages from "@/pages/messages";
 import ProjectDetail from "@/pages/project-detail";
 import ProposalDetail from "@/pages/proposal-detail";
+import SwapProposal from "@/pages/swap-proposal";
 import Matching from "@/pages/matching";
 import Settings from "@/pages/settings";
 import Help from "@/pages/help";
@@ -34,11 +36,13 @@ function Router() {
       <Route path="/browse" component={BrowseServices} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/profile/:id?" component={Profile} />
+      <Route path="/profile-setup" component={ProfileSetup} />
       <Route path="/service/new" component={ServiceForm} />
       <Route path="/service/edit/:id" component={ServiceForm} />
       <Route path="/messages" component={Messages} />
       <Route path="/project/:id" component={ProjectDetail} />
       <Route path="/proposal/:id" component={ProposalDetail} />
+      <Route path="/swap-proposal/:serviceId" component={SwapProposal} />
       <Route path="/matching" component={Matching} />
       <Route path="/settings" component={Settings} />
       <Route path="/help" component={Help} />
