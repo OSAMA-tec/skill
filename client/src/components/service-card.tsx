@@ -29,9 +29,9 @@ export default function ServiceCard({ service }: ServiceCardProps) {
   const { user } = service;
 
   return (
-    <Card className="hover:border-primary/50 transition-colors group" data-testid={`card-service-${service.id}`}>
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-4">
+    <Card className="hover:border-primary/50 transition-colors group h-full" data-testid={`card-service-${service.id}`}>
+      <CardContent className="p-4 sm:p-6 h-full flex flex-col">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-2">
           <Badge 
             variant={service.serviceType === "offer" ? "default" : "secondary"}
             className={service.serviceType === "offer" ? "bg-green-500/10 text-green-400" : "bg-primary/10 text-primary"}
@@ -61,7 +61,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-1 sm:gap-2 mb-4">
           {service.skills.slice(0, 3).map((skill, index) => (
             <Badge key={index} variant="outline" className="text-xs">
               {skill}
@@ -99,7 +99,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           </div>
         )}
 
-        <div className="mt-4 flex gap-2">
+        <div className="mt-auto flex flex-col sm:flex-row gap-2">
           <Link href={`/profile/${user?.id}`}>
             <Button variant="outline" size="sm" className="flex-1" data-testid={`button-view-profile-${service.id}`}>
               View Profile

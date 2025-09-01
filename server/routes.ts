@@ -5,8 +5,18 @@ import { insertUserSchema, insertServiceSchema, insertSwapProposalSchema, insert
 import { z } from "zod";
 import session from "express-session";
 import MemoryStore from "memorystore";
+import bcrypt from "bcrypt";
 
 const MemStore = MemoryStore(session);
+
+// Password hashing utility
+const hashPassword = async (password: string): Promise<string> => {
+  return await bcrypt.hash(password, 10);
+};
+
+const verifyPassword = async (password: string, hash: string): Promise<boolean> => {
+  return await bcrypt.compare(password, hash);
+};
 
 // Authentication middleware
 const requireAuth = (req: any, res: any, next: any) => {

@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+// import { WebSocketServer } from "ws";
 
 const app = express();
 app.use(express.json());
@@ -61,6 +62,10 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
+  
+  // WebSocket server disabled for development stability
+  // Will be re-enabled after resolving conflicts with Vite HMR
+  
   server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
   });

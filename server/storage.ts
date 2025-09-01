@@ -19,11 +19,14 @@ import {
   messages
 } from "@shared/schema";
 import { randomUUID } from "crypto";
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+import { db } from "./db";
+import bcrypt from "bcrypt";
 import { eq, and, or, like, ilike } from "drizzle-orm";
 
 export interface IStorage {
+  // Authentication
+  validatePassword(email: string, password: string): Promise<User | null>;
+  hashPassword(password: string): Promise<string>;
   // Users
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
@@ -67,6 +70,14 @@ export interface IStorage {
   createMessage(message: InsertMessage): Promise<Message>;
   markMessageAsRead(id: string): Promise<boolean>;
   
+  // Matching algorithm
+  getMatchingSuggestions(userId: string): Promise<{
+    user: User;
+    service: Service;
+    matchScore: number;
+    matchReasons: string[];
+  }[]>;
+  
   // Admin methods
   getAllServices(): Promise<Service[]>;
   getAllSwapProposals(): Promise<SwapProposal[]>;
@@ -80,6 +91,18 @@ export interface IStorage {
 }
 
 export class MemStorage implements IStorage {
+  // Authentication methods
+  async validatePassword(email: string, password: string): Promise<User | null> {
+    const user = await this.getUserByEmail(email);
+    if (!user) return null;
+    
+    const isValid = await bcrypt.compare(password, user.password);
+    return isValid ? user : null;
+  }
+  
+  async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
+  }
   private users: Map<string, User>;
   private services: Map<string, Service>;
   private swapProposals: Map<string, SwapProposal>;
@@ -358,6 +381,84 @@ export class MemStorage implements IStorage {
     return Array.from(this.swapProposals.values());
   }
 
+  async getMatchingSuggestions(userId: string): Promise<{
+    user: User;
+    service: Service;
+    matchScore: number;
+    matchReasons: string[];
+  }[]> {
+    const user = await this.getUser(userId);
+    if (!user) return [];
+    
+    const userServices = await this.getServicesByUser(userId);
+    const userOfferedSkills = userServices
+      .filter(s => s.serviceType === "offer")
+      .flatMap(s => s.skills);
+    const userNeededSkills = userServices
+      .filter(s => s.serviceType === "need")
+      .flatMap(s => s.skills);
+    
+    const allServices = Array.from(this.services.values())
+      .filter(s => s.userId !== userId && s.isActive);
+    
+    const suggestions = [];
+    
+    for (const service of allServices) {
+      const serviceOwner = await this.getUser(service.userId);
+      if (!serviceOwner) continue;
+      
+      let matchScore = 0;
+      const matchReasons = [];
+      
+      // Skill matching
+      if (service.serviceType === "need" && userOfferedSkills.length > 0) {
+        const skillMatches = service.skills.filter(skill => 
+          userOfferedSkills.includes(skill)
+        );
+        if (skillMatches.length > 0) {
+          matchScore += skillMatches.length * 20;
+          matchReasons.push(`Skills match: ${skillMatches.join(", ")}`);
+        }
+      }
+      
+      if (service.serviceType === "offer" && userNeededSkills.length > 0) {
+        const skillMatches = service.skills.filter(skill => 
+          userNeededSkills.includes(skill)
+        );
+        if (skillMatches.length > 0) {
+          matchScore += skillMatches.length * 20;
+          matchReasons.push(`You need: ${skillMatches.join(", ")}`);
+        }
+      }
+      
+      // Rating bonus
+      if (serviceOwner.rating >= 4.5) {
+        matchScore += 10;
+        matchReasons.push("Highly rated professional");
+      }
+      
+      // Category matching
+      const userCategories = userServices.map(s => s.category);
+      if (userCategories.includes(service.category)) {
+        matchScore += 5;
+        matchReasons.push("Same category expertise");
+      }
+      
+      if (matchScore > 0) {
+        suggestions.push({
+          user: serviceOwner,
+          service,
+          matchScore,
+          matchReasons
+        });
+      }
+    }
+    
+    return suggestions
+      .sort((a, b) => b.matchScore - a.matchScore)
+      .slice(0, 10);
+  }
+
   async getAdminStats(): Promise<{
     totalUsers: number;
     totalServices: number;
@@ -376,14 +477,27 @@ export class MemStorage implements IStorage {
 }
 
 export class DrizzleStorage implements IStorage {
-  private db;
+  private db: typeof db;
+  
+  // Authentication methods
+  async validatePassword(email: string, password: string): Promise<User | null> {
+    const user = await this.getUserByEmail(email);
+    if (!user) return null;
+    
+    const isValid = await bcrypt.compare(password, user.password);
+    return isValid ? user : null;
+  }
+  
+  async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
+  }
 
   constructor() {
     if (!process.env.DATABASE_URL) {
       throw new Error("DATABASE_URL environment variable is required");
     }
-    const sql = neon(process.env.DATABASE_URL);
-    this.db = drizzle(sql);
+    // Use the database connection from db.ts
+    this.db = db;
   }
 
   // Users

@@ -57,7 +57,7 @@ export default function Dashboard() {
               </Link>
             </div>
             
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
               <ScaleIn delay={0.1}>
                 <Card className="hover:shadow-lg transition-shadow duration-300">
                   <CardContent className="p-4 sm:p-6 text-center">
@@ -104,7 +104,7 @@ export default function Dashboard() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="projects" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
             <TabsTrigger value="projects" data-testid="tab-projects" className="text-xs sm:text-sm">Projects</TabsTrigger>
             <TabsTrigger value="proposals" data-testid="tab-proposals" className="text-xs sm:text-sm">Proposals</TabsTrigger>
             <TabsTrigger value="services" data-testid="tab-services" className="text-xs sm:text-sm">Services</TabsTrigger>
@@ -112,7 +112,7 @@ export default function Dashboard() {
           </TabsList>
 
           <TabsContent value="projects" className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -288,7 +288,7 @@ export default function Dashboard() {
               </Link>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
               {servicesLoading ? (
                 [...Array(6)].map((_, i) => (
                   <div key={i} className="h-48 bg-card rounded-lg animate-pulse" />

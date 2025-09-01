@@ -32,7 +32,7 @@ export default function Navigation() {
     <nav className="border-b border-border bg-card/50 backdrop-blur sticky top-0 z-50">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-4 lg:space-x-8">
             <Link href="/">
               <div className="flex items-center space-x-2 cursor-pointer" data-testid="link-home">
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -41,7 +41,7 @@ export default function Navigation() {
                 <span className="text-xl font-bold text-foreground">SkillSwap</span>
               </div>
             </Link>
-            <div className="hidden lg:flex items-center space-x-6">
+            <div className="hidden lg:flex items-center space-x-4 xl:space-x-6">
               <NavLink href="/browse" testId="link-browse-services">Browse</NavLink>
               {isAuthenticated && (
                 <>
@@ -102,7 +102,7 @@ export default function Navigation() {
               </DropdownMenu>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2">
             {isAuthenticated ? (
               <>
                 <Button variant="ghost" size="sm" className="hidden sm:flex" data-testid="button-notifications">
