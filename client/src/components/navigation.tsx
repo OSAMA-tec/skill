@@ -1,13 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Bell, ArrowRightLeft, User, Settings, Menu, ChevronDown, Info, HelpCircle, Trophy, DollarSign, Mail } from "lucide-react";
+import { Bell, ArrowRightLeft, User, Settings, Menu, ChevronDown, Info, HelpCircle, Trophy, DollarSign, Mail, Shield, LogOut } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useState } from "react";
+import { useAuth, useSignout } from "@/hooks/useAuth";
 
 export default function Navigation() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, isSuperAdmin, isAdmin } = useAuth();
+  const signout = useSignout();
 
   const NavLink = ({ href, children, testId }: { href: string; children: React.ReactNode; testId: string }) => (
     <Link href={href}>
@@ -40,9 +43,21 @@ export default function Navigation() {
             </Link>
             <div className="hidden lg:flex items-center space-x-6">
               <NavLink href="/browse" testId="link-browse-services">Browse</NavLink>
-              <NavLink href="/matching" testId="link-matching">Matching</NavLink>
-              <NavLink href="/messages" testId="link-messages">Messages</NavLink>
-              <NavLink href="/dashboard" testId="link-dashboard">Dashboard</NavLink>
+              {isAuthenticated && (
+                <>
+                  <NavLink href="/matching" testId="link-matching">Matching</NavLink>
+                  <NavLink href="/messages" testId="link-messages">Messages</NavLink>
+                  <NavLink href="/dashboard" testId="link-dashboard">Dashboard</NavLink>
+                </>
+              )}
+              {isSuperAdmin && (
+                <NavLink href="/admin" testId="link-admin">
+                  <div className="flex items-center gap-1">
+                    <Shield className="w-4 h-4" />
+                    Admin
+                  </div>
+                </NavLink>
+              )}
               
               {/* More Menu */}
               <DropdownMenu>
@@ -88,29 +103,65 @@ export default function Navigation() {
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="sm" className="hidden sm:flex" data-testid="button-notifications">
-              <Bell className="w-4 h-4" />
-            </Button>
-            <Link href="/profile" className="hidden sm:flex">
-              <Button variant="ghost" size="sm" data-testid="button-profile">
-                <User className="w-4 h-4" />
-              </Button>
-            </Link>
-            <Link href="/settings" className="hidden sm:flex">
-              <Button variant="ghost" size="sm" data-testid="button-settings">
-                <Settings className="w-4 h-4" />
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button className="hidden sm:flex" size="sm" data-testid="button-sign-up">
-                Sign Up
-              </Button>
-            </Link>
-            <Link href="/signin">
-              <Button variant="outline" className="hidden sm:flex" size="sm" data-testid="button-sign-in">
-                Sign In
-              </Button>
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Button variant="ghost" size="sm" className="hidden sm:flex" data-testid="button-notifications">
+                  <Bell className="w-4 h-4" />
+                </Button>
+                <Link href="/profile" className="hidden sm:flex">
+                  <Button variant="ghost" size="sm" data-testid="button-profile">
+                    <User className="w-4 h-4" />
+                  </Button>
+                </Link>
+                <Link href="/settings" className="hidden sm:flex">
+                  <Button variant="ghost" size="sm" data-testid="button-settings">
+                    <Settings className="w-4 h-4" />
+                  </Button>
+                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="hidden sm:flex" data-testid="button-user-menu">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-xs text-primary-foreground">
+                          {user?.fullName?.charAt(0) || 'U'}
+                        </div>
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <div className="px-2 py-1.5 text-sm font-medium">
+                      {user?.fullName}
+                    </div>
+                    <div className="px-2 py-1 text-xs text-muted-foreground">
+                      {user?.email}
+                    </div>
+                    <div className="px-2 py-1 mb-1">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-primary/10 text-primary capitalize">
+                        {user?.role?.replace('_', ' ')}
+                      </span>
+                    </div>
+                    <DropdownMenuItem onClick={() => signout.mutate()} className="text-destructive">
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <>
+                <Link href="/signup">
+                  <Button className="hidden sm:flex" size="sm" data-testid="button-sign-up">
+                    Sign Up
+                  </Button>
+                </Link>
+                <Link href="/signin">
+                  <Button variant="outline" className="hidden sm:flex" size="sm" data-testid="button-sign-in">
+                    Sign In
+                  </Button>
+                </Link>
+              </>
+            )}
             
             {/* Mobile Menu */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -125,9 +176,21 @@ export default function Navigation() {
                     <h3 className="font-semibold text-lg">Navigation</h3>
                     <div className="space-y-3 pl-4">
                       <NavLink href="/browse" testId="mobile-link-browse">Browse Services</NavLink>
-                      <NavLink href="/matching" testId="mobile-link-matching">Smart Matching</NavLink>
-                      <NavLink href="/messages" testId="mobile-link-messages">Messages</NavLink>
-                      <NavLink href="/dashboard" testId="mobile-link-dashboard">Dashboard</NavLink>
+                      {isAuthenticated && (
+                        <>
+                          <NavLink href="/matching" testId="mobile-link-matching">Smart Matching</NavLink>
+                          <NavLink href="/messages" testId="mobile-link-messages">Messages</NavLink>
+                          <NavLink href="/dashboard" testId="mobile-link-dashboard">Dashboard</NavLink>
+                        </>
+                      )}
+                      {isSuperAdmin && (
+                        <NavLink href="/admin" testId="mobile-link-admin">
+                          <div className="flex items-center gap-2">
+                            <Shield className="w-4 h-4" />
+                            Admin Panel
+                          </div>
+                        </NavLink>
+                      )}
                     </div>
                   </div>
                   
@@ -142,26 +205,46 @@ export default function Navigation() {
                     </div>
                   </div>
                   
-                  <div className="space-y-4 pt-6 border-t border-border">
-                    <h3 className="font-semibold text-lg">Account</h3>
-                    <div className="space-y-3 pl-4">
-                      <NavLink href="/profile" testId="mobile-link-profile">My Profile</NavLink>
-                      <NavLink href="/settings" testId="mobile-link-settings">Settings</NavLink>
+                  {isAuthenticated ? (
+                    <>
+                      <div className="space-y-4 pt-6 border-t border-border">
+                        <h3 className="font-semibold text-lg">Account</h3>
+                        <div className="space-y-3 pl-4">
+                          <NavLink href="/profile" testId="mobile-link-profile">My Profile</NavLink>
+                          <NavLink href="/settings" testId="mobile-link-settings">Settings</NavLink>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3 pt-6 border-t border-border">
+                        <div className="px-4 py-2 bg-muted rounded-lg">
+                          <div className="text-sm font-medium">{user?.fullName}</div>
+                          <div className="text-xs text-muted-foreground">{user?.email}</div>
+                          <div className="mt-1">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-primary/10 text-primary capitalize">
+                              {user?.role?.replace('_', ' ')}
+                            </span>
+                          </div>
+                        </div>
+                        <Button variant="destructive" className="w-full" onClick={() => signout.mutate()} data-testid="mobile-button-sign-out">
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Sign Out
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="space-y-3 pt-6 border-t border-border">
+                      <Link href="/signup">
+                        <Button className="w-full" data-testid="mobile-button-sign-up">
+                          Sign Up
+                        </Button>
+                      </Link>
+                      <Link href="/signin">
+                        <Button variant="outline" className="w-full" data-testid="mobile-button-sign-in">
+                          Sign In
+                        </Button>
+                      </Link>
                     </div>
-                  </div>
-                  
-                  <div className="space-y-3 pt-6 border-t border-border">
-                    <Link href="/signup">
-                      <Button className="w-full" data-testid="mobile-button-sign-up">
-                        Sign Up
-                      </Button>
-                    </Link>
-                    <Link href="/signin">
-                      <Button variant="outline" className="w-full" data-testid="mobile-button-sign-in">
-                        Sign In
-                      </Button>
-                    </Link>
-                  </div>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>

@@ -16,6 +16,20 @@ const requireAuth = (req: any, res: any, next: any) => {
   next();
 };
 
+const requireAdmin = async (req: any, res: any, next: any) => {
+  if (!req.session?.userId) {
+    return res.status(401).json({ message: "Authentication required" });
+  }
+  
+  const user = await storage.getUser(req.session.userId);
+  if (!user || (user.role !== "admin" && user.role !== "super_admin")) {
+    return res.status(403).json({ message: "Admin access required" });
+  }
+  
+  req.user = user;
+  next();
+};
+
 const requireSuperAdmin = async (req: any, res: any, next: any) => {
   if (!req.session?.userId) {
     return res.status(401).json({ message: "Authentication required" });
@@ -129,7 +143,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Super Admin endpoints
+  // Super Admin endpoints - User management
   app.get("/api/admin/users", requireSuperAdmin, async (req, res) => {
     try {
       // For super admin, fetch all users
@@ -141,7 +155,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/services", requireSuperAdmin, async (req, res) => {
+  // Update user role (super admin only)
+  app.patch("/api/admin/users/:id/role", requireSuperAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { role } = req.body;
+      
+      if (!["user", "admin", "super_admin"].includes(role)) {
+        return res.status(400).json({ message: "Invalid role" });
+      }
+      
+      const user = await storage.updateUserRole(id, role);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const { password, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(500).json({ message: "Error updating user role", error });
+    }
+  });
+
+  // Deactivate/reactivate user (super admin only)
+  app.patch("/api/admin/users/:id/status", requireSuperAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { isActive } = req.body;
+      
+      const user = await storage.updateUserStatus(id, isActive);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const { password, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(500).json({ message: "Error updating user status", error });
+    }
+  });
+
+  // Admin and Super Admin can view services
+  app.get("/api/admin/services", requireAdmin, async (req, res) => {
     try {
       const allServices = await storage.getAllServices();
       const servicesWithUsers = await Promise.all(
@@ -156,7 +211,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/proposals", requireSuperAdmin, async (req, res) => {
+  // Admin and Super Admin can view proposals
+  app.get("/api/admin/proposals", requireAdmin, async (req, res) => {
     try {
       const allProposals = await storage.getAllSwapProposals();
       res.json(allProposals);
@@ -165,7 +221,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/stats", requireSuperAdmin, async (req, res) => {
+  // Admin and Super Admin can view stats
+  app.get("/api/admin/stats", requireAdmin, async (req, res) => {
     try {
       const stats = await storage.getAdminStats();
       res.json(stats);
@@ -220,17 +277,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else if (search) {
         services = await storage.searchServices(search as string);
       } else {
-        // Get all active services
-        const allServices = await storage.getServicesByType("offer");
-        const needServices = await storage.getServicesByType("need");
-        services = [...allServices, ...needServices];
+        // Get all services based on user role
+        if (req.session?.userId) {
+          const user = await storage.getUser(req.session.userId);
+          
+          if (user?.role === 'super_admin' || user?.role === 'admin') {
+            // Admin users can see all services (including inactive)
+            services = await storage.getAllServices();
+          } else {
+            // Regular users only see active services
+            const allServices = await storage.getServicesByType("offer");
+            const needServices = await storage.getServicesByType("need");
+            services = [...allServices, ...needServices];
+          }
+        } else {
+          // Non-authenticated users only see active services
+          const allServices = await storage.getServicesByType("offer");
+          const needServices = await storage.getServicesByType("need");
+          services = [...allServices, ...needServices];
+        }
       }
       
-      // Populate user data
+      // Populate user data (exclude password for privacy)
       const servicesWithUsers = await Promise.all(
         services.map(async (service) => {
           const user = await storage.getUser(service.userId);
-          return { ...service, user };
+          return { ...service, user: user ? { ...user, password: undefined } : null };
         })
       );
       
@@ -284,11 +356,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/swap-proposals", async (req, res) => {
     try {
       const { userId } = req.query;
-      if (!userId) {
-        return res.status(400).json({ message: "userId is required" });
-      }
       
-      const proposals = await storage.getSwapProposalsByUser(userId as string);
+      let proposals;
+      if (req.session?.userId) {
+        const currentUser = await storage.getUser(req.session.userId);
+        
+        if (currentUser?.role === 'super_admin' || currentUser?.role === 'admin') {
+          // Admin users can see all proposals or filter by userId
+          if (userId) {
+            proposals = await storage.getSwapProposalsByUser(userId as string);
+          } else {
+            proposals = await storage.getAllSwapProposals();
+          }
+        } else {
+          // Regular users can only see their own proposals
+          proposals = await storage.getSwapProposalsByUser(currentUser.id);
+        }
+      } else {
+        return res.status(401).json({ message: "Authentication required" });
+      }
       
       // Populate related data
       const proposalsWithData = await Promise.all(

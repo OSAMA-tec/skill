@@ -30,6 +30,8 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
+  updateUserRole(id: string, role: string): Promise<User | undefined>;
+  updateUserStatus(id: string, isActive: boolean): Promise<User | undefined>;
   getAllUsers(): Promise<User[]>;
   
   // Services
@@ -134,6 +136,14 @@ export class MemStorage implements IStorage {
     const updatedUser = { ...user, ...updates };
     this.users.set(id, updatedUser);
     return updatedUser;
+  }
+
+  async updateUserRole(id: string, role: string): Promise<User | undefined> {
+    return await this.updateUser(id, { role });
+  }
+
+  async updateUserStatus(id: string, isActive: boolean): Promise<User | undefined> {
+    return await this.updateUser(id, { isActive });
   }
 
   // Services
@@ -399,6 +409,16 @@ export class DrizzleStorage implements IStorage {
 
   async updateUser(id: string, updates: Partial<User>): Promise<User | undefined> {
     const result = await this.db.update(users).set(updates).where(eq(users.id, id)).returning();
+    return result[0];
+  }
+
+  async updateUserRole(id: string, role: string): Promise<User | undefined> {
+    const result = await this.db.update(users).set({ role }).where(eq(users.id, id)).returning();
+    return result[0];
+  }
+
+  async updateUserStatus(id: string, isActive: boolean): Promise<User | undefined> {
+    const result = await this.db.update(users).set({ isActive }).where(eq(users.id, id)).returning();
     return result[0];
   }
 
