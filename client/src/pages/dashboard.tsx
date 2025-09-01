@@ -1,5 +1,7 @@
 import Navigation from "@/components/navigation";
 import ProjectCard from "@/components/project-card";
+import DashboardSkeleton from "@/components/dashboard-skeleton";
+import { FadeInUp, StaggerContainer, StaggerItem, ScaleIn } from "@/components/enhanced-animations";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -43,52 +45,62 @@ export default function Dashboard() {
       
       <div className="container mx-auto px-4 lg:px-8 py-8">
         {/* Dashboard Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-4xl font-bold">My Dashboard</h1>
-            <Link href="/service/new">
-              <Button data-testid="button-new-service">
-                <Plus className="w-4 h-4 mr-2" />
-                New Service Listing
-              </Button>
-            </Link>
+        <FadeInUp>
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h1 className="text-4xl font-bold">My Dashboard</h1>
+              <Link href="/service/new">
+                <Button data-testid="button-new-service">
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Service Listing
+                </Button>
+              </Link>
+            </div>
+            
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              <ScaleIn delay={0.1}>
+                <Card className="hover:shadow-lg transition-shadow duration-300">
+                  <CardContent className="p-4 sm:p-6 text-center">
+                    <div className="text-xl sm:text-2xl font-bold text-primary mb-1" data-testid="text-active-swaps">
+                      {stats.activeSwaps}
+                    </div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">Active Swaps</div>
+                  </CardContent>
+                </Card>
+              </ScaleIn>
+              <ScaleIn delay={0.2}>
+                <Card className="hover:shadow-lg transition-shadow duration-300">
+                  <CardContent className="p-4 sm:p-6 text-center">
+                    <div className="text-xl sm:text-2xl font-bold text-green-400 mb-1" data-testid="text-completed-swaps">
+                      {stats.completedSwaps}
+                    </div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">Completed</div>
+                  </CardContent>
+                </Card>
+              </ScaleIn>
+              <ScaleIn delay={0.3}>
+                <Card className="hover:shadow-lg transition-shadow duration-300">
+                  <CardContent className="p-4 sm:p-6 text-center">
+                    <div className="text-xl sm:text-2xl font-bold text-yellow-400 mb-1" data-testid="text-user-rating">
+                      {stats.rating}
+                    </div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">Your Rating</div>
+                  </CardContent>
+                </Card>
+              </ScaleIn>
+              <ScaleIn delay={0.4}>
+                <Card className="hover:shadow-lg transition-shadow duration-300">
+                  <CardContent className="p-4 sm:p-6 text-center">
+                    <div className="text-xl sm:text-2xl font-bold text-blue-400 mb-1" data-testid="text-pending-proposals">
+                      {stats.proposals}
+                    </div>
+                    <div className="text-xs sm:text-sm text-muted-foreground">Pending Proposals</div>
+                  </CardContent>
+                </Card>
+              </ScaleIn>
+            </div>
           </div>
-          
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <Card>
-              <CardContent className="p-4 sm:p-6 text-center">
-                <div className="text-xl sm:text-2xl font-bold text-primary mb-1" data-testid="text-active-swaps">
-                  {stats.activeSwaps}
-                </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">Active Swaps</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 sm:p-6 text-center">
-                <div className="text-xl sm:text-2xl font-bold text-green-400 mb-1" data-testid="text-completed-swaps">
-                  {stats.completedSwaps}
-                </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">Completed</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 sm:p-6 text-center">
-                <div className="text-xl sm:text-2xl font-bold text-yellow-400 mb-1" data-testid="text-user-rating">
-                  {stats.rating}
-                </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">Your Rating</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 sm:p-6 text-center">
-                <div className="text-xl sm:text-2xl font-bold text-blue-400 mb-1" data-testid="text-pending-proposals">
-                  {stats.proposals}
-                </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">Pending Proposals</div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        </FadeInUp>
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="projects" className="space-y-6">

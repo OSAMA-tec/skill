@@ -1,4 +1,6 @@
 import Navigation from "@/components/navigation";
+import ProfileSkeleton from "@/components/profile-skeleton";
+import { FadeInUp, StaggerContainer, StaggerItem, SlideInLeft, SlideInRight } from "@/components/enhanced-animations";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,18 +30,31 @@ export default function Profile() {
     isVerified: true
   };
 
-  const { data: services = [] } = useQuery({
+  const { data: services = [], isLoading: servicesLoading } = useQuery({
     queryKey: ["/api/services", { userId: user.id }],
     enabled: true
   });
 
-  const { data: reviews = [] } = useQuery({
+  const { data: reviews = [], isLoading: reviewsLoading } = useQuery({
     queryKey: ["/api/reviews", { userId: user.id }],
     enabled: true
   });
 
+  const isLoading = servicesLoading || reviewsLoading;
+
   const offeredServices = (services as any[]).filter((s: any) => s.serviceType === "offer");
   const neededServices = (services as any[]).filter((s: any) => s.serviceType === "need");
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="container mx-auto px-4 lg:px-8 py-8">
+          <ProfileSkeleton />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -47,15 +62,16 @@ export default function Profile() {
       
       <div className="container mx-auto px-4 lg:px-8 py-8">
         {/* Profile Header */}
-        <div className="mb-8">
-          <Card>
-            <CardContent className="p-8">
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div className="flex items-center gap-6">
-                  <Avatar className="w-24 h-24">
-                    <AvatarImage src={user.profileImage} alt={user.fullName} />
-                    <AvatarFallback>{user.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                  </Avatar>
+        <SlideInLeft>
+          <div className="mb-8">
+            <Card className="overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+                  <div className="flex items-center gap-6">
+                    <Avatar className="w-24 h-24 ring-4 ring-primary/10">
+                      <AvatarImage src={user.profileImage} alt={user.fullName} />
+                      <AvatarFallback>{user.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                    </Avatar>
                   
                   <div>
                     <div className="flex items-center gap-2 mb-2">
@@ -355,6 +371,7 @@ export default function Profile() {
             </Card>
           </TabsContent>
         </Tabs>
+        </SlideInLeft>
       </div>
     </div>
   );

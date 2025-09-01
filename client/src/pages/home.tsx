@@ -1,4 +1,5 @@
 import Navigation from "@/components/navigation";
+import { FadeInUp, StaggerContainer, StaggerItem, SlideInLeft, SlideInRight, AnimatedCard } from "@/components/enhanced-animations";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -123,44 +124,58 @@ export default function Home() {
       <section className="py-20 px-4 lg:px-8">
         <div className="container mx-auto text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-              Trade Skills, Not Cash
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Get professional services by offering your professional services. No payment required, just skill bartering between talented professionals.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link href="/profile">
-                <Button size="lg" className="px-8 py-3" data-testid="button-start-swapping">
-                  Start Swapping
-                </Button>
-              </Link>
-              <Link href="/browse">
-                <Button variant="outline" size="lg" className="px-8 py-3" data-testid="button-browse-services">
-                  Browse Services
-                </Button>
-              </Link>
-            </div>
+            <FadeInUp>
+              <h1 className="text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+                Trade Skills, Not Cash
+              </h1>
+            </FadeInUp>
+            <FadeInUp delay={0.2}>
+              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Get professional services by offering your professional services. No payment required, just skill bartering between talented professionals.
+              </p>
+            </FadeInUp>
+            <FadeInUp delay={0.4}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <Link href="/profile">
+                  <Button size="lg" className="px-8 py-3" data-testid="button-start-swapping">
+                    Start Swapping
+                  </Button>
+                </Link>
+                <Link href="/browse">
+                  <Button variant="outline" size="lg" className="px-8 py-3" data-testid="button-browse-services">
+                    Browse Services
+                  </Button>
+                </Link>
+              </div>
+            </FadeInUp>
             
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2" data-testid="text-active-users">1,247</div>
-                <div className="text-sm text-muted-foreground">Active Users</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2" data-testid="text-completed-swaps">856</div>
-                <div className="text-sm text-muted-foreground">Completed Swaps</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2" data-testid="text-avg-rating">4.8</div>
-                <div className="text-sm text-muted-foreground">Avg Rating</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2" data-testid="text-service-categories">25+</div>
-                <div className="text-sm text-muted-foreground">Service Categories</div>
-              </div>
-            </div>
+            <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
+              <StaggerItem>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-primary mb-2" data-testid="text-active-users">1,247</div>
+                  <div className="text-sm text-muted-foreground">Active Users</div>
+                </div>
+              </StaggerItem>
+              <StaggerItem>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-primary mb-2" data-testid="text-completed-swaps">856</div>
+                  <div className="text-sm text-muted-foreground">Completed Swaps</div>
+                </div>
+              </StaggerItem>
+              <StaggerItem>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-primary mb-2" data-testid="text-avg-rating">4.8</div>
+                  <div className="text-sm text-muted-foreground">Avg Rating</div>
+                </div>
+              </StaggerItem>
+              <StaggerItem>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-primary mb-2" data-testid="text-service-categories">25+</div>
+                  <div className="text-sm text-muted-foreground">Service Categories</div>
+                </div>
+              </StaggerItem>
+            </StaggerContainer>
           </div>
         </div>
       </section>
@@ -168,86 +183,100 @@ export default function Home() {
       {/* How It Works */}
       <section className="py-20 px-4 lg:px-8 bg-card/30">
         <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">How SkillSwap Works</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Simple, transparent skill exchange in four easy steps
-            </p>
-          </div>
+          <FadeInUp>
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4">How SkillSwap Works</h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Simple, transparent skill exchange in four easy steps
+              </p>
+            </div>
+          </FadeInUp>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center group">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
-                <Users className="text-2xl text-primary" />
+          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <StaggerItem>
+              <div className="text-center group">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                  <Users className="text-2xl text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Create Profile</h3>
+                <p className="text-muted-foreground">Set up your profile with skills you offer and services you need</p>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Create Profile</h3>
-              <p className="text-muted-foreground">Set up your profile with skills you offer and services you need</p>
-            </div>
+            </StaggerItem>
             
-            <div className="text-center group">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
-                <TrendingUp className="text-2xl text-primary" />
+            <StaggerItem>
+              <div className="text-center group">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                  <TrendingUp className="text-2xl text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Find Matches</h3>
+                <p className="text-muted-foreground">Browse professionals who need your skills and offer what you need</p>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Find Matches</h3>
-              <p className="text-muted-foreground">Browse professionals who need your skills and offer what you need</p>
-            </div>
+            </StaggerItem>
             
-            <div className="text-center group">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
-                <ArrowRightLeft className="text-2xl text-primary" />
+            <StaggerItem>
+              <div className="text-center group">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                  <ArrowRightLeft className="text-2xl text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Propose Swap</h3>
+                <p className="text-muted-foreground">Send swap proposals and agree on project scope and deliverables</p>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Propose Swap</h3>
-              <p className="text-muted-foreground">Send swap proposals and agree on project scope and deliverables</p>
-            </div>
+            </StaggerItem>
             
-            <div className="text-center group">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
-                <CheckCircle className="text-2xl text-primary" />
+            <StaggerItem>
+              <div className="text-center group">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                  <CheckCircle className="text-2xl text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Complete & Rate</h3>
+                <p className="text-muted-foreground">Deliver work, confirm completion, and rate each other's performance</p>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Complete & Rate</h3>
-              <p className="text-muted-foreground">Deliver work, confirm completion, and rate each other's performance</p>
-            </div>
-          </div>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* Service Categories */}
       <section className="py-20 px-4 lg:px-8">
         <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Popular Service Categories</h2>
-            <p className="text-xl text-muted-foreground">
-              Discover the most in-demand professional services on our platform
-            </p>
-          </div>
+          <FadeInUp>
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4">Popular Service Categories</h2>
+              <p className="text-xl text-muted-foreground">
+                Discover the most in-demand professional services on our platform
+              </p>
+            </div>
+          </FadeInUp>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {serviceCategories.map((category, index) => (
-              <Card key={index} className="hover:border-primary/50 transition-colors cursor-pointer group" data-testid={`card-category-${index}`}>
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-primary/20 transition-colors">
-                      <i className={`${category.icon} text-xl text-primary`}></i>
+              <StaggerItem key={index}>
+                <AnimatedCard className="hover:border-primary/50 transition-colors cursor-pointer group" data-testid={`card-category-${index}`}>
+                  <CardContent className="p-6">
+                    <div className="flex items-center mb-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                        <i className={`${category.icon} text-xl text-primary`}></i>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">{category.name}</h3>
+                        <p className="text-sm text-muted-foreground">{category.count}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-lg font-semibold">{category.name}</h3>
-                      <p className="text-sm text-muted-foreground">{category.count}</p>
+                    <p className="text-muted-foreground text-sm mb-4">
+                      {category.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {category.skills.map((skill, skillIndex) => (
+                        <Badge key={skillIndex} variant="secondary" className="bg-accent/20 text-accent-foreground hover:bg-primary hover:text-primary-foreground transition-colors">
+                          {skill}
+                        </Badge>
+                      ))}
                     </div>
-                  </div>
-                  <p className="text-muted-foreground text-sm mb-4">
-                    {category.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {category.skills.map((skill, skillIndex) => (
-                      <Badge key={skillIndex} variant="secondary" className="bg-accent/20 text-accent-foreground">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </AnimatedCard>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -480,19 +509,19 @@ export default function Home() {
               <h4 className="font-semibold mb-4">Platform</h4>
               <ul className="space-y-2 text-muted-foreground">
                 <li><Link href="/browse" className="hover:text-foreground transition-colors">Browse Services</Link></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">How It Works</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Success Stories</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Pricing</a></li>
+                <li><Link href="/about" className="hover:text-foreground transition-colors">How It Works</Link></li>
+                <li><Link href="/success-stories" className="hover:text-foreground transition-colors">Success Stories</Link></li>
+                <li><Link href="/pricing" className="hover:text-foreground transition-colors">Pricing</Link></li>
               </ul>
             </div>
             
             <div>
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Help Center</a></li>
+                <li><Link href="/help" className="hover:text-foreground transition-colors">Help Center</Link></li>
                 <li><a href="#" className="hover:text-foreground transition-colors">Community Guidelines</a></li>
                 <li><a href="#" className="hover:text-foreground transition-colors">Dispute Resolution</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Contact Us</a></li>
+                <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact Us</Link></li>
               </ul>
             </div>
             
