@@ -10,9 +10,18 @@ import {
   type Review,
   type InsertReview,
   type Message,
-  type InsertMessage
+  type InsertMessage,
+  users,
+  services,
+  swapProposals,
+  projects,
+  reviews,
+  messages
 } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+import { eq, and, or, like, ilike } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -314,4 +323,190 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DrizzleStorage implements IStorage {
+  private db;
+
+  constructor() {
+    if (!process.env.DATABASE_URL) {
+      throw new Error("DATABASE_URL environment variable is required");
+    }
+    const sql = neon(process.env.DATABASE_URL);
+    this.db = drizzle(sql);
+  }
+
+  // Users
+  async getUser(id: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.username, username)).limit(1);
+    return result[0];
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.email, email)).limit(1);
+    return result[0];
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const result = await this.db.insert(users).values(insertUser).returning();
+    return result[0];
+  }
+
+  async updateUser(id: string, updates: Partial<User>): Promise<User | undefined> {
+    const result = await this.db.update(users).set(updates).where(eq(users.id, id)).returning();
+    return result[0];
+  }
+
+  // Services
+  async getService(id: string): Promise<Service | undefined> {
+    const result = await this.db.select().from(services).where(eq(services.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getServicesByUser(userId: string): Promise<Service[]> {
+    return await this.db.select().from(services).where(eq(services.userId, userId));
+  }
+
+  async getServicesByCategory(category: string): Promise<Service[]> {
+    return await this.db.select().from(services).where(
+      and(eq(services.category, category), eq(services.isActive, true))
+    );
+  }
+
+  async getServicesByType(serviceType: "offer" | "need"): Promise<Service[]> {
+    return await this.db.select().from(services).where(
+      and(eq(services.serviceType, serviceType), eq(services.isActive, true))
+    );
+  }
+
+  async searchServices(query: string): Promise<Service[]> {
+    return await this.db.select().from(services).where(
+      and(
+        eq(services.isActive, true),
+        or(
+          ilike(services.title, `%${query}%`),
+          ilike(services.description, `%${query}%`),
+          ilike(services.category, `%${query}%`)
+        )
+      )
+    );
+  }
+
+  async createService(insertService: InsertService): Promise<Service> {
+    const result = await this.db.insert(services).values(insertService).returning();
+    return result[0];
+  }
+
+  async updateService(id: string, updates: Partial<Service>): Promise<Service | undefined> {
+    const result = await this.db.update(services).set(updates).where(eq(services.id, id)).returning();
+    return result[0];
+  }
+
+  async deleteService(id: string): Promise<boolean> {
+    const result = await this.db.delete(services).where(eq(services.id, id)).returning();
+    return result.length > 0;
+  }
+
+  // Swap Proposals
+  async getSwapProposal(id: string): Promise<SwapProposal | undefined> {
+    const result = await this.db.select().from(swapProposals).where(eq(swapProposals.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getSwapProposalsByUser(userId: string): Promise<SwapProposal[]> {
+    return await this.db.select().from(swapProposals).where(
+      or(eq(swapProposals.proposerId, userId), eq(swapProposals.recipientId, userId))
+    );
+  }
+
+  async createSwapProposal(insertProposal: InsertSwapProposal): Promise<SwapProposal> {
+    const result = await this.db.insert(swapProposals).values(insertProposal).returning();
+    return result[0];
+  }
+
+  async updateSwapProposal(id: string, updates: Partial<SwapProposal>): Promise<SwapProposal | undefined> {
+    const result = await this.db.update(swapProposals).set(updates).where(eq(swapProposals.id, id)).returning();
+    return result[0];
+  }
+
+  // Projects
+  async getProject(id: string): Promise<Project | undefined> {
+    const result = await this.db.select().from(projects).where(eq(projects.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getProjectsByUser(userId: string): Promise<Project[]> {
+    const userProposals = await this.db.select().from(swapProposals).where(
+      or(eq(swapProposals.proposerId, userId), eq(swapProposals.recipientId, userId))
+    );
+    const proposalIds = userProposals.map(p => p.id);
+    
+    if (proposalIds.length === 0) return [];
+    
+    return await this.db.select().from(projects).where(
+      or(...proposalIds.map(id => eq(projects.swapProposalId, id)))
+    );
+  }
+
+  async createProject(insertProject: InsertProject): Promise<Project> {
+    const result = await this.db.insert(projects).values(insertProject).returning();
+    return result[0];
+  }
+
+  async updateProject(id: string, updates: Partial<Project>): Promise<Project | undefined> {
+    const updateData = { ...updates };
+    if (updates.status === "completed" && !updates.completedAt) {
+      updateData.completedAt = new Date();
+    }
+    const result = await this.db.update(projects).set(updateData).where(eq(projects.id, id)).returning();
+    return result[0];
+  }
+
+  // Reviews
+  async getReviewsByUser(userId: string): Promise<Review[]> {
+    return await this.db.select().from(reviews).where(eq(reviews.revieweeId, userId));
+  }
+
+  async getReviewsByProject(projectId: string): Promise<Review[]> {
+    return await this.db.select().from(reviews).where(eq(reviews.projectId, projectId));
+  }
+
+  async createReview(insertReview: InsertReview): Promise<Review> {
+    const result = await this.db.insert(reviews).values(insertReview).returning();
+    return result[0];
+  }
+
+  // Messages
+  async getMessagesByProject(projectId: string): Promise<Message[]> {
+    return await this.db.select().from(messages)
+      .where(eq(messages.projectId, projectId))
+      .orderBy(messages.createdAt);
+  }
+
+  async getMessagesBetweenUsers(userId1: string, userId2: string): Promise<Message[]> {
+    return await this.db.select().from(messages).where(
+      or(
+        and(eq(messages.senderId, userId1), eq(messages.recipientId, userId2)),
+        and(eq(messages.senderId, userId2), eq(messages.recipientId, userId1))
+      )
+    ).orderBy(messages.createdAt);
+  }
+
+  async createMessage(insertMessage: InsertMessage): Promise<Message> {
+    const result = await this.db.insert(messages).values(insertMessage).returning();
+    return result[0];
+  }
+
+  async markMessageAsRead(id: string): Promise<boolean> {
+    const result = await this.db.update(messages).set({ isRead: true }).where(eq(messages.id, id)).returning();
+    return result.length > 0;
+  }
+}
+
+// Use environment variable to determine which storage to use
+export const storage = process.env.NODE_ENV === "production" || process.env.DATABASE_URL 
+  ? new DrizzleStorage() 
+  : new MemStorage();
