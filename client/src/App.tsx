@@ -19,11 +19,17 @@ import Contact from "@/pages/contact";
 import SuccessStories from "@/pages/success-stories";
 import Pricing from "@/pages/pricing";
 import NotFound from "@/pages/not-found";
+import Signin from "@/pages/signin";
+import Signup from "@/pages/signup";
+import Admin from "@/pages/admin";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/signin" component={Signin} />
+      <Route path="/signup" component={Signup} />
+      <Route path="/admin" component={Admin} />
       <Route path="/about" component={About} />
       <Route path="/browse" component={BrowseServices} />
       <Route path="/dashboard" component={Dashboard} />

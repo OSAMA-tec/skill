@@ -9,6 +9,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   fullName: text("full_name").notNull(),
+  role: text("role").notNull().default("user"), // user, admin, super_admin
   title: text("title"),
   bio: text("bio"),
   skills: jsonb("skills").$type<string[]>().default([]),

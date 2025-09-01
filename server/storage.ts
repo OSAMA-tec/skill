@@ -30,6 +30,7 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
+  getAllUsers(): Promise<User[]>;
   
   // Services
   getService(id: string): Promise<Service | undefined>;
@@ -63,6 +64,17 @@ export interface IStorage {
   getMessagesBetweenUsers(userId1: string, userId2: string): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
   markMessageAsRead(id: string): Promise<boolean>;
+  
+  // Admin methods
+  getAllServices(): Promise<Service[]>;
+  getAllSwapProposals(): Promise<SwapProposal[]>;
+  getAdminStats(): Promise<{
+    totalUsers: number;
+    totalServices: number;
+    totalProposals: number;
+    totalProjects: number;
+    activeUsers: number;
+  }>;
 }
 
 export class MemStorage implements IStorage {
@@ -100,6 +112,7 @@ export class MemStorage implements IStorage {
     const user: User = { 
       ...insertUser, 
       id,
+      role: insertUser.role || "user",
       title: insertUser.title || null,
       bio: insertUser.bio || null,
       skills: insertUser.skills || [],
@@ -321,6 +334,35 @@ export class MemStorage implements IStorage {
     this.messages.set(id, message);
     return true;
   }
+
+  // Admin methods
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+
+  async getAllServices(): Promise<Service[]> {
+    return Array.from(this.services.values());
+  }
+
+  async getAllSwapProposals(): Promise<SwapProposal[]> {
+    return Array.from(this.swapProposals.values());
+  }
+
+  async getAdminStats(): Promise<{
+    totalUsers: number;
+    totalServices: number;
+    totalProposals: number;
+    totalProjects: number;
+    activeUsers: number;
+  }> {
+    return {
+      totalUsers: this.users.size,
+      totalServices: this.services.size,
+      totalProposals: this.swapProposals.size,
+      totalProjects: this.projects.size,
+      activeUsers: Array.from(this.users.values()).filter(u => u.isVerified).length
+    };
+  }
 }
 
 export class DrizzleStorage implements IStorage {
@@ -503,6 +545,43 @@ export class DrizzleStorage implements IStorage {
   async markMessageAsRead(id: string): Promise<boolean> {
     const result = await this.db.update(messages).set({ isRead: true }).where(eq(messages.id, id)).returning();
     return result.length > 0;
+  }
+
+  // Admin methods
+  async getAllUsers(): Promise<User[]> {
+    return await this.db.select().from(users);
+  }
+
+  async getAllServices(): Promise<Service[]> {
+    return await this.db.select().from(services);
+  }
+
+  async getAllSwapProposals(): Promise<SwapProposal[]> {
+    return await this.db.select().from(swapProposals);
+  }
+
+  async getAdminStats(): Promise<{
+    totalUsers: number;
+    totalServices: number;
+    totalProposals: number;
+    totalProjects: number;
+    activeUsers: number;
+  }> {
+    const [userCount, serviceCount, proposalCount, projectCount, activeUserCount] = await Promise.all([
+      this.db.select().from(users).then(result => result.length),
+      this.db.select().from(services).then(result => result.length),
+      this.db.select().from(swapProposals).then(result => result.length),
+      this.db.select().from(projects).then(result => result.length),
+      this.db.select().from(users).where(eq(users.isVerified, true)).then(result => result.length)
+    ]);
+
+    return {
+      totalUsers: userCount,
+      totalServices: serviceCount,
+      totalProposals: proposalCount,
+      totalProjects: projectCount,
+      activeUsers: activeUserCount
+    };
   }
 }
 

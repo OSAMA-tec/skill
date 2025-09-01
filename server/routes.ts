@@ -3,8 +3,177 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertUserSchema, insertServiceSchema, insertSwapProposalSchema, insertProjectSchema, insertReviewSchema, insertMessageSchema } from "@shared/schema";
 import { z } from "zod";
+import session from "express-session";
+import MemoryStore from "memorystore";
+
+const MemStore = MemoryStore(session);
+
+// Authentication middleware
+const requireAuth = (req: any, res: any, next: any) => {
+  if (!req.session?.userId) {
+    return res.status(401).json({ message: "Authentication required" });
+  }
+  next();
+};
+
+const requireSuperAdmin = async (req: any, res: any, next: any) => {
+  if (!req.session?.userId) {
+    return res.status(401).json({ message: "Authentication required" });
+  }
+  
+  const user = await storage.getUser(req.session.userId);
+  if (!user || user.role !== "super_admin") {
+    return res.status(403).json({ message: "Super admin access required" });
+  }
+  
+  req.user = user;
+  next();
+};
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Session configuration
+  app.use(session({
+    store: new MemStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // Set to true in production with HTTPS
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  }));
+
+  // Authentication endpoints
+  app.post("/api/auth/signup", async (req, res) => {
+    try {
+      const userData = insertUserSchema.parse(req.body);
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(userData.email);
+      if (existingUser) {
+        return res.status(400).json({ message: "User already exists" });
+      }
+      
+      const existingUsername = await storage.getUserByUsername(userData.username);
+      if (existingUsername) {
+        return res.status(400).json({ message: "Username already taken" });
+      }
+      
+      // Create user
+      const user = await storage.createUser(userData);
+      
+      // Create session
+      (req.session as any).userId = user.id;
+      
+      // Return user without password
+      const { password, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid signup data", error });
+    }
+  });
+
+  app.post("/api/auth/signin", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+      }
+      
+      // Find user by email
+      const user = await storage.getUserByEmail(email);
+      if (!user) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+      
+      // Check password (in production, use bcrypt)
+      if (user.password !== password) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+      
+      // Create session
+      (req.session as any).userId = user.id;
+      
+      // Return user without password
+      const { password: _, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(500).json({ message: "Signin error", error });
+    }
+  });
+
+  app.post("/api/auth/signout", (req, res) => {
+    req.session?.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Could not sign out" });
+      }
+      res.json({ message: "Signed out successfully" });
+    });
+  });
+
+  app.get("/api/auth/me", requireAuth, async (req, res) => {
+    try {
+      const user = await storage.getUser((req.session as any).userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const { password, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching user", error });
+    }
+  });
+
+  // Super Admin endpoints
+  app.get("/api/admin/users", requireSuperAdmin, async (req, res) => {
+    try {
+      // For super admin, fetch all users
+      const allUsers = await storage.getAllUsers();
+      const usersWithoutPasswords = allUsers.map(({ password, ...user }) => user);
+      res.json(usersWithoutPasswords);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching users", error });
+    }
+  });
+
+  app.get("/api/admin/services", requireSuperAdmin, async (req, res) => {
+    try {
+      const allServices = await storage.getAllServices();
+      const servicesWithUsers = await Promise.all(
+        allServices.map(async (service) => {
+          const user = await storage.getUser(service.userId);
+          return { ...service, user: user ? { ...user, password: undefined } : null };
+        })
+      );
+      res.json(servicesWithUsers);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching services", error });
+    }
+  });
+
+  app.get("/api/admin/proposals", requireSuperAdmin, async (req, res) => {
+    try {
+      const allProposals = await storage.getAllSwapProposals();
+      res.json(allProposals);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching proposals", error });
+    }
+  });
+
+  app.get("/api/admin/stats", requireSuperAdmin, async (req, res) => {
+    try {
+      const stats = await storage.getAdminStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching stats", error });
+    }
+  });
+
   // Users
   app.post("/api/users", async (req, res) => {
     try {
