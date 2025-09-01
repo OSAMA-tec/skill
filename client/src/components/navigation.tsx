@@ -101,12 +101,16 @@ export default function Navigation() {
                 <Settings className="w-4 h-4" />
               </Button>
             </Link>
-            <Button className="hidden sm:flex" size="sm" data-testid="button-sign-up">
-              Sign Up
-            </Button>
-            <Button variant="outline" className="hidden sm:flex" size="sm" data-testid="button-sign-in">
-              Sign In
-            </Button>
+            <Link href="/signup">
+              <Button className="hidden sm:flex" size="sm" data-testid="button-sign-up">
+                Sign Up
+              </Button>
+            </Link>
+            <Link href="/signin">
+              <Button variant="outline" className="hidden sm:flex" size="sm" data-testid="button-sign-in">
+                Sign In
+              </Button>
+            </Link>
             
             {/* Mobile Menu */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -147,12 +151,16 @@ export default function Navigation() {
                   </div>
                   
                   <div className="space-y-3 pt-6 border-t border-border">
-                    <Button className="w-full" data-testid="mobile-button-sign-up">
-                      Sign Up
-                    </Button>
-                    <Button variant="outline" className="w-full" data-testid="mobile-button-sign-in">
-                      Sign In
-                    </Button>
+                    <Link href="/signup">
+                      <Button className="w-full" data-testid="mobile-button-sign-up">
+                        Sign Up
+                      </Button>
+                    </Link>
+                    <Link href="/signin">
+                      <Button variant="outline" className="w-full" data-testid="mobile-button-sign-in">
+                        Sign In
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </SheetContent>
