@@ -24,6 +24,12 @@ import NotFound from "@/pages/not-found";
 import Signin from "@/pages/signin";
 import Signup from "@/pages/signup";
 import Admin from "@/pages/admin";
+import Notifications from "@/pages/notifications";
+import Analytics from "@/pages/analytics";
+import Projects from "@/pages/projects";
+import Learning from "@/pages/learning";
+import Community from "@/pages/community";
+import Marketplace from "@/pages/marketplace";
 
 function Router() {
   return (
@@ -49,6 +55,12 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/success-stories" component={SuccessStories} />
       <Route path="/pricing" component={Pricing} />
+      <Route path="/notifications" component={Notifications} />
+      <Route path="/analytics" component={Analytics} />
+      <Route path="/projects" component={Projects} />
+      <Route path="/learning" component={Learning} />
+      <Route path="/community" component={Community} />
+      <Route path="/marketplace" component={Marketplace} />
       <Route component={NotFound} />
     </Switch>
   );

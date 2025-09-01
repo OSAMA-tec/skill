@@ -5,6 +5,8 @@ import { Bell, ArrowRightLeft, User, Settings, Menu, ChevronDown, Info, HelpCirc
 import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import { useAuth, useSignout } from "@/hooks/useAuth";
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, NavigationMenuContent } from "@/components/ui/navigation-menu";
+
 
 export default function Navigation() {
   const [location] = useLocation();
@@ -14,10 +16,10 @@ export default function Navigation() {
 
   const NavLink = ({ href, children, testId }: { href: string; children: React.ReactNode; testId: string }) => (
     <Link href={href}>
-      <span 
+      <span
         className={`transition-colors cursor-pointer ${
-          location === href 
-            ? "text-foreground" 
+          location === href
+            ? "text-foreground"
             : "text-muted-foreground hover:text-foreground"
         }`}
         data-testid={testId}
@@ -42,64 +44,87 @@ export default function Navigation() {
               </div>
             </Link>
             <div className="hidden lg:flex items-center space-x-4 xl:space-x-6">
-              <NavLink href="/browse" testId="link-browse-services">Browse</NavLink>
-              {isAuthenticated && (
-                <>
-                  <NavLink href="/matching" testId="link-matching">Matching</NavLink>
-                  <NavLink href="/messages" testId="link-messages">Messages</NavLink>
-                  <NavLink href="/dashboard" testId="link-dashboard">Dashboard</NavLink>
-                </>
-              )}
-              {isSuperAdmin && (
-                <NavLink href="/admin" testId="link-admin">
-                  <div className="flex items-center gap-1">
-                    <Shield className="w-4 h-4" />
-                    Admin
-                  </div>
-                </NavLink>
-              )}
-              
-              {/* More Menu */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-1" data-testid="button-more-menu">
-                    More
-                    <ChevronDown className="w-4 h-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem asChild>
-                    <Link href="/about" className="flex items-center gap-2 w-full" data-testid="dropdown-about">
-                      <Info className="w-4 h-4" />
-                      About SkillSwap
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/success-stories" className="flex items-center gap-2 w-full" data-testid="dropdown-success-stories">
-                      <Trophy className="w-4 h-4" />
-                      Success Stories
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/pricing" className="flex items-center gap-2 w-full" data-testid="dropdown-pricing">
-                      <DollarSign className="w-4 h-4" />
-                      Pricing
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/help" className="flex items-center gap-2 w-full" data-testid="dropdown-help">
-                      <HelpCircle className="w-4 h-4" />
-                      Help Center
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/contact" className="flex items-center gap-2 w-full" data-testid="dropdown-contact">
-                      <Mail className="w-4 h-4" />
-                      Contact Us
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavLink href="/browse" testId="link-browse-services">Browse</NavLink>
+                  </NavigationMenuItem>
+                  {isAuthenticated && (
+                    <>
+                      <NavigationMenuItem>
+                        <NavLink href="/matching" testId="link-matching">Matching</NavLink>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem>
+                        <NavLink href="/messages" testId="link-messages">Messages</NavLink>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem>
+                        <NavLink href="/dashboard" testId="link-dashboard">Dashboard</NavLink>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem>
+                        <NavLink href="/projects" testId="link-projects">Projects</NavLink>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem>
+                        <NavLink href="/community" testId="link-community">Community</NavLink>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem>
+                        <NavLink href="/learning" testId="link-learning">Learning</NavLink>
+                      </NavigationMenuItem>
+                    </>
+                  )}
+                  {isSuperAdmin && (
+                    <NavigationMenuItem>
+                      <NavLink href="/admin" testId="link-admin">
+                        <div className="flex items-center gap-1">
+                          <Shield className="w-4 h-4" />
+                          Admin
+                        </div>
+                      </NavLink>
+                    </NavigationMenuItem>
+                  )}
+
+                  {/* More Menu */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="flex items-center gap-1" data-testid="button-more-menu">
+                        More
+                        <ChevronDown className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem asChild>
+                        <Link href="/about" className="flex items-center gap-2 w-full" data-testid="dropdown-about">
+                          <Info className="w-4 h-4" />
+                          About SkillSwap
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/success-stories" className="flex items-center gap-2 w-full" data-testid="dropdown-success-stories">
+                          <Trophy className="w-4 h-4" />
+                          Success Stories
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/pricing" className="flex items-center gap-2 w-full" data-testid="dropdown-pricing">
+                          <DollarSign className="w-4 h-4" />
+                          Pricing
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/help" className="flex items-center gap-2 w-full" data-testid="dropdown-help">
+                          <HelpCircle className="w-4 h-4" />
+                          Help Center
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/contact" className="flex items-center gap-2 w-full" data-testid="dropdown-contact">
+                          <Mail className="w-4 h-4" />
+                          Contact Us
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </NavigationMenuList>
+              </NavigationMenu>
             </div>
           </div>
           <div className="flex items-center space-x-1 sm:space-x-2">
@@ -162,7 +187,7 @@ export default function Navigation() {
                 </Link>
               </>
             )}
-            
+
             {/* Mobile Menu */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
@@ -181,6 +206,9 @@ export default function Navigation() {
                           <NavLink href="/matching" testId="mobile-link-matching">Smart Matching</NavLink>
                           <NavLink href="/messages" testId="mobile-link-messages">Messages</NavLink>
                           <NavLink href="/dashboard" testId="mobile-link-dashboard">Dashboard</NavLink>
+                          <NavLink href="/projects" testId="mobile-link-projects">Projects</NavLink>
+                          <NavLink href="/community" testId="mobile-link-community">Community</NavLink>
+                          <NavLink href="/learning" testId="mobile-link-learning">Learning</NavLink>
                         </>
                       )}
                       {isSuperAdmin && (
@@ -193,7 +221,7 @@ export default function Navigation() {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4 pt-6 border-t border-border">
                     <h3 className="font-semibold text-lg">Platform</h3>
                     <div className="space-y-3 pl-4">
@@ -204,7 +232,7 @@ export default function Navigation() {
                       <NavLink href="/contact" testId="mobile-link-contact">Contact</NavLink>
                     </div>
                   </div>
-                  
+
                   {isAuthenticated ? (
                     <>
                       <div className="space-y-4 pt-6 border-t border-border">
@@ -214,7 +242,7 @@ export default function Navigation() {
                           <NavLink href="/settings" testId="mobile-link-settings">Settings</NavLink>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-3 pt-6 border-t border-border">
                         <div className="px-4 py-2 bg-muted rounded-lg">
                           <div className="text-sm font-medium">{user?.fullName}</div>
@@ -239,7 +267,7 @@ export default function Navigation() {
                         </Button>
                       </Link>
                       <Link href="/signin">
-                        <Button variant="outline" className="w-full" data-testid="mobile-button-sign-in">
+                        <Button variant="outline" className="w-full" data-testid="button-sign-in">
                           Sign In
                         </Button>
                       </Link>
